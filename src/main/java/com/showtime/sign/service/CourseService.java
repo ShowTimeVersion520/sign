@@ -15,7 +15,7 @@ public class CourseService {
     @Autowired
     private CourseService courseService;
 
-//    public String InsertCourse(List<Courses> courses) {
-//
-//    }
+    public String InsertCourse(List<Courses> courses) {
+        return null;
+    }
 }
