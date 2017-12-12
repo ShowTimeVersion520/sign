@@ -1,10 +1,17 @@
 package com.showtime.sign.utils;
 
 import com.alibaba.fastjson.JSONObject;
+import com.showtime.sign.constant.LoginTicketFieldConstant;
+import com.showtime.sign.model.entity.LoginTicket;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import java.security.MessageDigest;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 public class SignUtil {
@@ -13,6 +20,7 @@ public class SignUtil {
     public static String TOUTIAO_DOMAIN = "http://127.0.0.1:8080/";
     public static String IMAGE_DIR = "D:/upload/";
     public static String[] IMAGE_FILE_EXTD = new String[] {"png", "bmp", "jpg", "jpeg"};
+
 
     public static boolean isFileAllowed(String fileName) {
         for (String ext : IMAGE_FILE_EXTD) {
@@ -44,6 +52,45 @@ public class SignUtil {
         return json.toJSONString();
     }
 
+    /** 可能出现多线程问题，之后修改 */
+    public static Map<String, Object> checkUsernameAndPassword(String username, String password){
+        Map<String, Object> map = new HashMap<String, Object>();
+        if (StringUtils.isBlank(username)) {
+            map.put("msgname", "用户名不能为空");
+            return map;
+        }
+
+        if (StringUtils.isBlank(password)) {
+            map.put("msgpwd", "密码不能为空");
+            return map;
+        }
+
+        return map;
+    }
+
+    public static Example logout(String ticket) {
+        Example example = new Example(LoginTicket.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andEqualTo(LoginTicketFieldConstant.TICKET, ticket);
+
+        return example;
+    }
+
+    /** 可能出现多线程问题，之后修改 */
+    public static LoginTicket InitLoginTicket(Long accountId) {
+        LoginTicket ticket = new LoginTicket();
+        Date date = new Date();
+        date.setTime(date.getTime() + 1000*3600*24);
+        //超时时间
+        ticket.setExpired(date);
+        ticket.setStatus((byte) 1);
+        ticket.setTicket(UUID.randomUUID().toString().replaceAll("-", ""));
+        ticket.setAccountId(accountId);
+        return ticket;
+    }
+
+    /** 可能出现多线程问题，之后修改 */
     public static String MD5(String key) {
         char hexDigits[] = {
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'

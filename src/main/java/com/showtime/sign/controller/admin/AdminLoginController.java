@@ -19,7 +19,7 @@ import java.util.Map;
 @Controller
 @Slf4j
 @RequestMapping(value = "/admin")
-public class LoginController {
+public class AdminLoginController {
 
     @Autowired
     private AdminService adminService;
@@ -33,7 +33,7 @@ public class LoginController {
             Cookie cookie = new Cookie(LoginTicketFieldConstant.TICKET, map.get("ticket").toString());
             cookie.setPath("/");
             response.addCookie(cookie);
-            return "redirect:admin/index";
+            return "redirect:index";
         }
         model.addAllAttributes(map);
         return "admin/login";

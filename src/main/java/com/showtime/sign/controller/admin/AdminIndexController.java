@@ -21,7 +21,7 @@ import java.util.List;
 @Controller
 @Slf4j
 @RequestMapping(value = "/admin")
-public class IndexController {
+public class AdminIndexController {
 
 
     @Autowired
@@ -29,7 +29,7 @@ public class IndexController {
 
     @GetMapping(value = {"/index"})
     public String index(){
-        return "index";
+        return "admin/index";
     }
 
 

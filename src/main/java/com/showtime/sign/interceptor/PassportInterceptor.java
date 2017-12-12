@@ -3,7 +3,7 @@ package com.showtime.sign.interceptor;
 
 
 import com.showtime.sign.constant.AttributeNameConstant;
-import com.showtime.sign.constant.RoleConstant;
+import com.showtime.sign.constant.TicketRoleConstant;
 import com.showtime.sign.enums.ResultEnum;
 import com.showtime.sign.exception.SignException;
 import com.showtime.sign.mapper.AdminMapper;
@@ -15,6 +15,7 @@ import com.showtime.sign.model.entity.Admin;
 import com.showtime.sign.model.entity.LoginTicket;
 import com.showtime.sign.model.entity.Students;
 import com.showtime.sign.model.entity.Teachers;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -29,6 +30,7 @@ import java.util.Date;
  * Created by nowcoder on 2016/7/3.
  */
 @Component
+@Slf4j
 public class PassportInterceptor implements HandlerInterceptor {
 
     @Autowired
@@ -58,6 +60,7 @@ public class PassportInterceptor implements HandlerInterceptor {
             }
         }
 
+        log.info("ticket is : {}", ticket);
         if (ticket != null) {
 
             LoginTicket t1 = new LoginTicket();
@@ -68,13 +71,13 @@ public class PassportInterceptor implements HandlerInterceptor {
                 return true;
             }
 
-            if(RoleConstant.ADMIN.equals(loginTicket.getRole())){
+            if(TicketRoleConstant.ADMIN.equals(loginTicket.getRole())){
                 Admin admin = adminMapper.selectByPrimaryKey(loginTicket.getAccountId());
                 hostHolder.setAdmin(admin);
-            }else if(RoleConstant.STUDENT.equals(loginTicket.getRole())){
+            }else if(TicketRoleConstant.STUDENT.equals(loginTicket.getRole())){
                 Students student = studentsMapper.selectByPrimaryKey(loginTicket.getAccountId());
                 hostHolder.setStudent(student);
-            }else if(RoleConstant.TEACHER.equals(loginTicket.getRole())){
+            }else if(TicketRoleConstant.TEACHER.equals(loginTicket.getRole())){
                 Teachers teacher = teachersMapper.selectByPrimaryKey(loginTicket.getAccountId());
                 hostHolder.setTeacher(teacher);
             }else {

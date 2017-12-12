@@ -11,7 +11,7 @@ public class Students {
     private Long id;
 
     /**
-     * 账号
+     * 学号
      */
     private String account;
 
@@ -55,18 +55,18 @@ public class Students {
     }
 
     /**
-     * 获取账号
+     * 获取学号
      *
-     * @return account - 账号
+     * @return account - 学号
      */
     public String getAccount() {
         return account;
     }
 
     /**
-     * 设置账号
+     * 设置学号
      *
-     * @param account 账号
+     * @param account 学号
      */
     public void setAccount(String account) {
         this.account = account;

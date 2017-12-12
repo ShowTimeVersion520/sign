@@ -1,6 +1,6 @@
 package com.showtime.sign.constant;
 
-public class RoleConstant {
+public class TicketRoleConstant {
     public final static Byte ADMIN = 0;
 
     public final static Byte STUDENT = 1;

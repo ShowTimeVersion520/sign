@@ -8,16 +8,16 @@
     <!--[if IE]>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <![endif]-->
-    <title>管理员后台</title>
-    <!-- BOOTSTRAP CORE STYLE CSS -->
-    <link href="../css/bootstrap.min.css" rel="stylesheet" />
-    <!-- FONTAWESOME STYLE CSS -->
-    <link href="../css/font-awesome.min.css" rel="stylesheet" />
-    <!-- CUSTOM STYLE CSS -->
-    <link href="../css/style.css" rel="stylesheet" />
+    <title>学生签到</title>
 </head>
 <body>
+<a href="www.baidu.com">历史记录</a>
+<a href="www.baidu.com">密码修改</a>
+<form id="sign" name="sign" method="post" onsubmit="" action="/student/sign">
+    <input type="text" name="courseId">
+    <input type="hidden"  name="studentAccount" value="${student.account}">
+    <input type="submit" name="Submit" value="签到" />
+</form>
 
-admin/index
 </body>
 </html>

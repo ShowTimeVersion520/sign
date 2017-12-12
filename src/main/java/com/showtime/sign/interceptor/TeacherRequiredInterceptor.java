@@ -20,7 +20,7 @@ public class TeacherRequiredInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         if (hostHolder.getTeacher() == null) {
-            httpServletResponse.sendRedirect("/teacher/login");
+            httpServletResponse.sendRedirect("/login");
             return false;
         }
         return true;

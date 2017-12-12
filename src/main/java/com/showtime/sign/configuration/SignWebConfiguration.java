@@ -33,9 +33,9 @@ public class SignWebConfiguration extends WebMvcConfigurerAdapter {
         registry.addInterceptor(adminRequiredInterceptor).
                 addPathPatterns("/admin/*").excludePathPatterns("/admin/login");
         registry.addInterceptor(studentRequiredInterceptor).
-                addPathPatterns("/student/*").excludePathPatterns("/student/login");
+                addPathPatterns("/student/*");
         registry.addInterceptor(teacherRequiredInterceptor).
-                addPathPatterns("/teacher/*").excludePathPatterns("/teacher/login");
+                addPathPatterns("/teacher/*");
         super.addInterceptors(registry);
     }
 }

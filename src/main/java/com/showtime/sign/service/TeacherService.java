@@ -1,28 +1,24 @@
 package com.showtime.sign.service;
 
-
-import com.showtime.sign.constant.LoginTicketFieldConstant;
 import com.showtime.sign.constant.TicketRoleConstant;
-import com.showtime.sign.mapper.AdminMapper;
 import com.showtime.sign.mapper.LoginTicketMapper;
-import com.showtime.sign.model.entity.Admin;
+import com.showtime.sign.mapper.StudentsMapper;
+import com.showtime.sign.mapper.TeachersMapper;
 import com.showtime.sign.model.entity.LoginTicket;
+import com.showtime.sign.model.entity.Students;
+import com.showtime.sign.model.entity.Teachers;
 import com.showtime.sign.utils.SignUtil;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.*;
-
-
+import java.util.Map;
+import java.util.UUID;
 
 @Service
-@Slf4j
-public class AdminService {
+public class TeacherService {
     @Autowired
-    private AdminMapper adminMapper;
+    private TeachersMapper teachersMapper;
 
     @Autowired
     private LoginTicketMapper loginTicketMapper;
@@ -34,69 +30,68 @@ public class AdminService {
             return map;
         }
 
-        Admin b1 = new Admin();
-        b1.setAccount(username);
-        Admin admin = adminMapper.selectOne(b1);
+        Teachers s1 = new Teachers();
+        s1.setAccount(username);
+        Teachers teacher = teachersMapper.selectOne(s1);
 
-        if (admin != null) {
+        if (teacher != null) {
             map.put("msgname", "用户名已经被注册");
             return map;
         }
 
         // 密码强度
-        admin = new Admin();
-        admin.setAccount(username);
-        admin.setSalt(UUID.randomUUID().toString().substring(0, 5));
-        admin.setPassword(SignUtil.MD5(password+admin.getSalt()));
-        adminMapper.insert(admin);
+        teacher = new Teachers();
+        teacher.setAccount(username);
+        teacher.setSalt(UUID.randomUUID().toString().substring(0, 5));
+        teacher.setPassword(SignUtil.MD5(password+teacher.getSalt()));
+        teachersMapper.insert(teacher);
         // 登陆
-        String ticket = addLoginTicket(admin.getId());
+        String ticket = addLoginTicket(teacher.getId());
         map.put("ticket", ticket);
         return map;
     }
 
 
     public Map<String, Object> login(String username, String password) {
+
         Map<String, Object> map = SignUtil.checkUsernameAndPassword(username,password);
 
         if(map.size() != 0){
             return map;
         }
 
-        Admin b1 = new Admin();
+        Teachers b1 = new Teachers();
         b1.setAccount(username);
-        Admin admin = adminMapper.selectOne(b1);
+        Teachers teacher = teachersMapper.selectOne(b1);
 
-        if (admin == null) {
-            /** 如果管理员第一次登录，则为其注册 */
-            if(adminMapper.selectCount(new Admin()) == 0){
-                return this.register(username, password);
-            }
+        if (teacher == null) {
             map.put("msgname", "用户名不存在");
             return map;
         }
 
-        if (!SignUtil.MD5(password+admin.getSalt()).equals(admin.getPassword())) {
+        if (!SignUtil.MD5(password+teacher.getSalt()).equals(teacher.getPassword())) {
             map.put("msgpwd", "密码不正确");
             return map;
         }
 
-        map.put("userId", admin.getId());
+        map.put("userId", teacher.getId());
 
-        String ticket = addLoginTicket(admin.getId());
+        String ticket = addLoginTicket(teacher.getId());
         map.put("ticket", ticket);
         return map;
     }
 
     private String addLoginTicket(Long accountId) {
         LoginTicket ticket = SignUtil.InitLoginTicket(accountId);
-        ticket.setRole(TicketRoleConstant.ADMIN);
+        ticket.setRole(TicketRoleConstant.TEACHER);
         loginTicketMapper.insert(ticket);
         return ticket.getTicket();
     }
 
-    public Admin getAdmin() {
-        return adminMapper.selectByPrimaryKey(1L);
+
+
+    public Teachers getTeachers(Long id) {
+        return teachersMapper.selectByPrimaryKey(id);
     }
 
     public void logout(String ticket) {
