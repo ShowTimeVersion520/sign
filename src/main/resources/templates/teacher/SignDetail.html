@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <![endif]-->
+    <title>课程签到</title>
+</head>
+<body>
+课程名称： ${course.name}
+教学班级：${course.classes}
+节次：${course.jieci}
+<br>
+<#if course.signState == 0>
+    <a href="/teacher/sign/start?courseId=${course.id}">开始签到</a>
+</#if>
+<#if course.signState == 1>
+    <a href="/teacher/sign/reset?courseId=${course.id}">签到重置</a>
+    <a href="/teacher/sign/aftersign?courseId=${course.id}">开始补签</a>
+</#if>
+<#if course.signState == 2 || course.signState == 3>
+    <a href="/teacher/sign/end?courseId=${course.id}">结束签到</a>
+</#if>
+</body>
+</html>

@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS `courses`(
   `classes` VARCHAR(64) COMMENT '教学班名称',
   `teacher` VARCHAR(64) COMMENT '授课教师',
   `jieci` CHAR(4) COMMENT '节次',
-  `sign_state` TINYINT COMMENT '签到状态， 0:未开始 1：已完成 2：签到中',
+  `sign_state` TINYINT COMMENT '签到状态， 0:未开始 1：已完成 2：签到中 3：补签中',
   `date` DATE COMMENT '日期'
 )ENGINE INNODB DEFAULT CHARSET=utf8 COMMENT='课程' AUTO_INCREMENT=1;
 

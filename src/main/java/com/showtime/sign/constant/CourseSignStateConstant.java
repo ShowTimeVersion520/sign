@@ -9,4 +9,7 @@ public class CourseSignStateConstant {
 
     /** 签到中 */
     public final static Byte ING_SIGN = 2;
+
+    /** 补签中 */
+    public final static Byte AFTER_SIGN = 3;
 }

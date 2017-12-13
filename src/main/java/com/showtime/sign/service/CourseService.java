@@ -1,10 +1,9 @@
 package com.showtime.sign.service;
 
+import com.showtime.sign.constant.CourseFieldConstant;
 import com.showtime.sign.constant.CourseSignStateConstant;
-import com.showtime.sign.constant.TicketRoleConstant;
 import com.showtime.sign.mapper.CoursesMapper;
 import com.showtime.sign.model.entity.Courses;
-import com.showtime.sign.model.entity.LoginTicket;
 import com.showtime.sign.utils.SignUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -13,20 +12,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import tk.mybatis.mapper.entity.Example;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -111,4 +105,41 @@ public class CourseService {
         return "success";
     }
 
+
+    public List<Courses> getCourseByTeacherNameAndDate(String name, String date) {
+        Example example = new Example(Courses.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andEqualTo(CourseFieldConstant.TEACHER, name);
+        criteria.andEqualTo(CourseFieldConstant.DATE, date);
+        return coursesMapper.selectByExample(example);
+    }
+
+    public void startSign(Long courseId) {
+        Courses course = coursesMapper.selectByPrimaryKey(courseId);
+        course.setSignState(CourseSignStateConstant.ING_SIGN);
+        coursesMapper.updateByPrimaryKey(course);
+    }
+
+    @Transactional
+    public void resetSign(Long courseId) {
+        Courses course = coursesMapper.selectByPrimaryKey(courseId);
+        course.setSignState(CourseSignStateConstant.NOT_SIGN);
+        coursesMapper.updateByPrimaryKey(course);
+
+        //删除同学们的签到状态
+    }
+
+    public void afterSign(Long courseId) {
+        Courses course = coursesMapper.selectByPrimaryKey(courseId);
+        course.setSignState(CourseSignStateConstant.AFTER_SIGN);
+        coursesMapper.updateByPrimaryKey(course);
+    }
+
+    public void endSign(Long courseId) {
+        log.info("into endSign");
+        Courses course = coursesMapper.selectByPrimaryKey(courseId);
+        course.setSignState(CourseSignStateConstant.FINISH_SIGN);
+        coursesMapper.updateByPrimaryKey(course);
+    }
 }
