@@ -4,22 +4,6 @@ import java.util.Date;
 import javax.persistence.*;
 
 public class Courses {
-
-    @Override
-    public String toString() {
-        return "Courses{" +
-                "id=" + id +
-                ", semester='" + semester + '\'' +
-                ", number=" + number +
-                ", name='" + name + '\'' +
-                ", classes='" + classes + '\'' +
-                ", teacher='" + teacher + '\'' +
-                ", jieci='" + jieci + '\'' +
-                ", signState=" + signState +
-                ", date=" + date +
-                '}';
-    }
-
     /**
      * 表主键
      */

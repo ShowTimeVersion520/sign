@@ -9,7 +9,7 @@
     <result column="student_id" property="studentId" jdbcType="BIGINT" />
     <result column="class_name" property="className" jdbcType="VARCHAR" />
     <result column="student_name" property="studentName" jdbcType="VARCHAR" />
-    <result column="course_number" property="courseNumber" jdbcType="BIGINT" />
+    <result column="course_id" property="courseId" jdbcType="BIGINT" />
     <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
     <result column="sign_state" property="signState" jdbcType="TINYINT" />
   </resultMap>

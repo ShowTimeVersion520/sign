@@ -33,8 +33,8 @@ public class SignDetil {
     /**
      * 签到的课程
      */
-    @Column(name = "course_number")
-    private Long courseNumber;
+    @Column(name = "course_id")
+    private Long courseId;
 
     /**
      * 签到时间
@@ -123,19 +123,19 @@ public class SignDetil {
     /**
      * 获取签到的课程
      *
-     * @return course_number - 签到的课程
+     * @return course_id - 签到的课程
      */
-    public Long getCourseNumber() {
-        return courseNumber;
+    public Long getCourseId() {
+        return courseId;
     }
 
     /**
      * 设置签到的课程
      *
-     * @param courseNumber 签到的课程
+     * @param courseId 签到的课程
      */
-    public void setCourseNumber(Long courseNumber) {
-        this.courseNumber = courseNumber;
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
     }
 
     /**

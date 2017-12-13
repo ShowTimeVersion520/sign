@@ -51,10 +51,10 @@ DROP TABLE IF EXISTS `sign_detil`;
 CREATE TABLE IF NOT EXISTS `sign_detil`(
   `id` BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT COMMENT '表主键',
 
-  `student_id` BIGINT UNSIGNED UNIQUE NOT NULL COMMENT '签到学生',
+  `student_id` BIGINT UNSIGNED NOT NULL COMMENT '签到学生',
   `class_name` VARCHAR(64) COMMENT '班级名称',
   `student_name` VARCHAR(64) COMMENT '学生姓名',
-  `course_number` BIGINT UNSIGNED COMMENT '签到的课程',
+  `course_id` BIGINT UNSIGNED COMMENT '签到的课程',
   `sign_time` TIMESTAMP COMMENT '签到时间',
   `sign_state` TINYINT COMMENT '签到状态 0:未签到 1:签到成功 2：补签'
 )ENGINE INNODB DEFAULT CHARSET=utf8 COMMENT='签到明细' AUTO_INCREMENT=1;
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS `sign_statistical`(
   `student_id` BIGINT UNSIGNED UNIQUE NOT NULL COMMENT '签到学生',
   `class_name` VARCHAR(64) COMMENT '班级名称',
   `student_name` VARCHAR(64) COMMENT '学生姓名',
-  `course_id` BIGINT UNSIGNED COMMENT '签到的课程',
+  `course_number` BIGINT UNSIGNED COMMENT '签到的课程',
   `sign_times` INT COMMENT '已经签到次数',
   `sign_need_times` INT COMMENT '需要签到次数'
 )ENGINE INNODB DEFAULT CHARSET=utf8 COMMENT='签到统计' AUTO_INCREMENT=1;

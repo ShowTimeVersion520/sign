@@ -32,8 +32,8 @@ public class SignStatistical {
     /**
      * 签到的课程
      */
-    @Column(name = "course_id")
-    private Long courseId;
+    @Column(name = "course_number")
+    private Long courseNumber;
 
     /**
      * 已经签到次数
@@ -122,19 +122,19 @@ public class SignStatistical {
     /**
      * 获取签到的课程
      *
-     * @return course_id - 签到的课程
+     * @return course_number - 签到的课程
      */
-    public Long getCourseId() {
-        return courseId;
+    public Long getCourseNumber() {
+        return courseNumber;
     }
 
     /**
      * 设置签到的课程
      *
-     * @param courseId 签到的课程
+     * @param courseNumber 签到的课程
      */
-    public void setCourseId(Long courseId) {
-        this.courseId = courseId;
+    public void setCourseNumber(Long courseNumber) {
+        this.courseNumber = courseNumber;
     }
 
     /**

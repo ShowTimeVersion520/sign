@@ -1,5 +1,6 @@
 package com.showtime.sign.controller.student;
 
+import com.showtime.sign.service.SignService;
 import com.showtime.sign.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -18,11 +19,15 @@ public class StudentSignController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private SignService signService;
+
     @ResponseBody
     @PostMapping(value = {"/sign"})
     public String sign(@Param("courseId") Long courseId,
                         @Param("studentAccount") String studentAccount){
         log.info("courseId : {}, studentAccount : {}", courseId, studentAccount);
-        return "签到成功";
+        String result = signService.studentSign(courseId,studentAccount);
+        return result;
     }
 }
