@@ -18,12 +18,12 @@ public class SignUtil {
 
 
     public static String TOUTIAO_DOMAIN = "http://127.0.0.1:8080/";
-    public static String IMAGE_DIR = "D:/upload/";
-    public static String[] IMAGE_FILE_EXTD = new String[] {"png", "bmp", "jpg", "jpeg"};
+    public static String EXCEL_DIR = "D:/upload/";
+    public static String[] EXCEL_FILE_EXTD = new String[] {"xls"};
 
 
     public static boolean isFileAllowed(String fileName) {
-        for (String ext : IMAGE_FILE_EXTD) {
+        for (String ext : EXCEL_FILE_EXTD) {
             if (ext.equals(fileName)) {
                 return true;
             }

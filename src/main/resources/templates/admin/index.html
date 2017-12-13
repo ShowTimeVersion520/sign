@@ -17,7 +17,12 @@
     <link href="../css/style.css" rel="stylesheet" />
 </head>
 <body>
+<form id="uploadCourse" name="uploadCourse" method="post" onsubmit=""
+      action="/admin/upload/course"
+      enctype="multipart/form-data">
 
-admin/index
+    <input type="file" name="file">
+    <input type="submit" name="Submit" value="课程上传" />
+</form>
 </body>
 </html>

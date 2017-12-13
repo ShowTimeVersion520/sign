@@ -37,12 +37,12 @@ DROP TABLE IF EXISTS `courses`;
 CREATE TABLE IF NOT EXISTS `courses`(
   `id` BIGINT UNSIGNED PRIMARY KEY AUTO_INCREMENT COMMENT '表主键',
 
-  `semester` VARCHAR(64) UNIQUE NOT NULL COMMENT '学年学期',
-  `number` INT UNIQUE NOT NULL COMMENT '开课编号',
+  `semester` VARCHAR(64) NOT NULL COMMENT '学年学期',
+  `number` INT NOT NULL COMMENT '开课编号',
   `name` VARCHAR(64) COMMENT '课程名称',
   `classes` VARCHAR(64) COMMENT '教学班名称',
   `teacher` VARCHAR(64) COMMENT '授课教师',
-  `jieci` INT COMMENT '节次',
+  `jieci` CHAR(4) COMMENT '节次',
   `sign_state` TINYINT COMMENT '签到状态， 0:未开始 1：已完成 2：签到中',
   `date` DATE COMMENT '日期'
 )ENGINE INNODB DEFAULT CHARSET=utf8 COMMENT='课程' AUTO_INCREMENT=1;

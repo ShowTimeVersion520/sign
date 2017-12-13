@@ -4,6 +4,22 @@ import java.util.Date;
 import javax.persistence.*;
 
 public class Courses {
+
+    @Override
+    public String toString() {
+        return "Courses{" +
+                "id=" + id +
+                ", semester='" + semester + '\'' +
+                ", number=" + number +
+                ", name='" + name + '\'' +
+                ", classes='" + classes + '\'' +
+                ", teacher='" + teacher + '\'' +
+                ", jieci='" + jieci + '\'' +
+                ", signState=" + signState +
+                ", date=" + date +
+                '}';
+    }
+
     /**
      * 表主键
      */
@@ -39,7 +55,7 @@ public class Courses {
     /**
      * 节次
      */
-    private Integer jieci;
+    private String jieci;
 
     /**
      * 签到状态， 0:未开始 1：已完成 2：签到中
@@ -165,7 +181,7 @@ public class Courses {
      *
      * @return jieci - 节次
      */
-    public Integer getJieci() {
+    public String getJieci() {
         return jieci;
     }
 
@@ -174,7 +190,7 @@ public class Courses {
      *
      * @param jieci 节次
      */
-    public void setJieci(Integer jieci) {
+    public void setJieci(String jieci) {
         this.jieci = jieci;
     }
 

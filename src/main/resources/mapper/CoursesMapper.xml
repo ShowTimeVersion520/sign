@@ -11,8 +11,20 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="classes" property="classes" jdbcType="VARCHAR" />
     <result column="teacher" property="teacher" jdbcType="VARCHAR" />
-    <result column="jieci" property="jieci" jdbcType="INTEGER" />
+    <result column="jieci" property="jieci" jdbcType="CHAR" />
     <result column="sign_state" property="signState" jdbcType="TINYINT" />
     <result column="date" property="date" jdbcType="DATE" />
   </resultMap>
+
+  <insert id="InsertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT
+      LAST_INSERT_ID()
+    </selectKey>
+    insert into courses (semester, number, name, classes, teacher, jieci, sign_state, date)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.semester},#{item.number},#{item.name},#{item.classes},#{item.teacher},#{item.jieci},#{item.signState},#{item.date})
+    </foreach>
+  </insert>
 </mapper>
