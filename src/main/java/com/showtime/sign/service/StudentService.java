@@ -1,24 +1,27 @@
 package com.showtime.sign.service;
 
-import com.showtime.sign.constant.LoginTicketFieldConstant;
-import com.showtime.sign.constant.StudentFieldConstant;
-import com.showtime.sign.constant.TicketRoleConstant;
+import com.showtime.sign.constant.*;
 import com.showtime.sign.enums.ResultEnum;
 import com.showtime.sign.exception.SignException;
 import com.showtime.sign.mapper.AdminMapper;
 import com.showtime.sign.mapper.LoginTicketMapper;
 import com.showtime.sign.mapper.StudentsMapper;
 import com.showtime.sign.model.base.HostHolder;
-import com.showtime.sign.model.entity.Admin;
-import com.showtime.sign.model.entity.LoginTicket;
-import com.showtime.sign.model.entity.Students;
-import com.showtime.sign.model.entity.Teachers;
+import com.showtime.sign.model.entity.*;
 import com.showtime.sign.utils.SignUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -135,5 +138,68 @@ public class StudentService {
         Students student = hostHolder.getStudent();
         student.setPassword(SignUtil.MD5(password+student.getSalt()));
         studentsMapper.updateByPrimaryKey(student);
+    }
+
+    public void InsertStudentByExcel(MultipartFile file) throws Exception {
+        if (SignUtil.checkExcelExt(file)) throw new SignException(ResultEnum.ERROR_EXCEL_EXT);
+
+
+        POIFSFileSystem fs=new POIFSFileSystem((FileInputStream)file.getInputStream());
+        //得到Excel工作簿对象
+        HSSFWorkbook wb = new HSSFWorkbook(fs);
+        //得到Excel工作表对象
+        HSSFSheet sheet = wb.getSheetAt(0);
+
+        List<Students> students = new ArrayList<>();  //存储student
+
+        //得到Excel工作表的行
+        for(int i=1; i<sheet.getLastRowNum(); ++i){
+            HSSFRow row = sheet.getRow(i);
+
+            Students student = new Students();
+
+            for(int j=0; j<=2; ++j){
+                switch (j){
+                    case 0 :    //学号
+                        student.setAccount(row.getCell(j).getStringCellValue());
+                        break;
+                    case 1 :    //姓名
+                        student.setName(row.getCell(j).getStringCellValue());
+                        break;
+                    case 2 :    //班级
+                        student.setClassName(row.getCell(j).getStringCellValue());
+                        break;
+                }
+            }
+
+            students.add(student);
+        }
+
+        InsertBatch(students);
+    }
+
+    private void InsertBatch(List<Students> students) {
+        //验证数据库中是否已经被注册,把已经注册的删除
+        for(int i=0; i<students.size(); ++i){
+            Example example = new Example(Students.class);
+            Example.Criteria criteria = example.createCriteria();
+
+            criteria.andEqualTo(StudentFieldConstant.ACCOUNT, students.get(i).getAccount());
+            List<Students> fromDataBase = studentsMapper.selectByExample(example);
+
+            if(fromDataBase.size() != 0){
+                students.remove(i);
+                --i;
+                continue;
+            }
+
+            //通过验证的给密码加密
+            students.get(i).setSalt(UUID.randomUUID().toString().substring(0, 5));
+            students.get(i).setPassword(SignUtil.MD5(AccountPasswordConstant.PASSWORD + students.get(i).getSalt()));
+        }
+
+        if(students.size() != 0){
+            studentsMapper.InsertBatch(students);
+        }
     }
 }

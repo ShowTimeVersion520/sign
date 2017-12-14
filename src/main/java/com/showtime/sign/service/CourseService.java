@@ -1,10 +1,15 @@
 package com.showtime.sign.service;
 
+import com.showtime.sign.constant.AccountPasswordConstant;
 import com.showtime.sign.constant.CourseFieldConstant;
 import com.showtime.sign.constant.CourseSignStateConstant;
+import com.showtime.sign.constant.StudentFieldConstant;
+import com.showtime.sign.enums.ResultEnum;
+import com.showtime.sign.exception.SignException;
 import com.showtime.sign.mapper.CoursesMapper;
 import com.showtime.sign.model.entity.Courses;
 import com.showtime.sign.model.entity.SignDetil;
+import com.showtime.sign.model.entity.Students;
 import com.showtime.sign.utils.SignUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -22,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Slf4j
@@ -33,16 +39,9 @@ public class CourseService {
     @Autowired
     private SignService signService;
 
-    public String InsertCourseByExcel(MultipartFile file) throws Exception {
-        // 正确性检验
-        int dotPos = file.getOriginalFilename().lastIndexOf(".");
-        if (dotPos < 0) {
-            return null;
-        }
-        String fileExt = file.getOriginalFilename().substring(dotPos + 1).toLowerCase();
-        if (!SignUtil.isFileAllowed(fileExt)) {
-            return null;
-        }
+    public void InsertCourseByExcel(MultipartFile file) throws Exception {
+        if (SignUtil.checkExcelExt(file)) throw new SignException(ResultEnum.ERROR_EXCEL_EXT);
+
 
         POIFSFileSystem fs=new POIFSFileSystem((FileInputStream)file.getInputStream());
         //得到Excel工作簿对象
@@ -104,9 +103,32 @@ public class CourseService {
             log.info("course : {}, i : {}, nowTeacher : {}", course.toString(), i, nowTeacher);
         }
 
-        coursesMapper.InsertBatch(courses);
+        InsertBatch(courses);
+    }
 
-        return "success";
+    private void InsertBatch(List<Courses> courses) {
+        //验证数据库中是否已经被注册,把已经注册的删除
+        for(int i=0; i<courses.size(); ++i){
+            Example example = new Example(Courses.class);
+            Example.Criteria criteria = example.createCriteria();
+
+            criteria.andEqualTo(CourseFieldConstant.NUMBER, courses.get(i).getNumber());
+            criteria.andEqualTo(CourseFieldConstant.JIECI, courses.get(i).getJieci());
+            criteria.andEqualTo(CourseFieldConstant.DATE,
+                    new SimpleDateFormat("yyyy-MM-dd").format(courses.get(i).getDate()));
+
+            List<Courses> fromDataBase = coursesMapper.selectByExample(example);
+
+            if(fromDataBase.size() != 0){
+                courses.remove(i);
+                --i;
+                continue;
+            }
+        }
+
+        if(courses.size() != 0) {
+            coursesMapper.InsertBatch(courses);
+        }
     }
 
 
@@ -152,4 +174,5 @@ public class CourseService {
     public List<Courses> getCourseBySignDetils(List<SignDetil> signDetils) {
         return coursesMapper.getCourseBySignDetils(signDetils);
     }
+
 }

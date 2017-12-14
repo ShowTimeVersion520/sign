@@ -12,4 +12,16 @@
     <result column="password" property="password" jdbcType="VARCHAR" />
     <result column="salt" property="salt" jdbcType="VARCHAR" />
   </resultMap>
+
+  <insert id="InsertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT
+      LAST_INSERT_ID()
+    </selectKey>
+    insert into students (account, name, class_name, password, salt)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.account},#{item.name},#{item.className},#{item.password},#{item.salt})
+    </foreach>
+  </insert>
 </mapper>

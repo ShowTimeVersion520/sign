@@ -5,6 +5,7 @@ import com.showtime.sign.constant.LoginTicketFieldConstant;
 import com.showtime.sign.model.entity.LoginTicket;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
 import java.security.MessageDigest;
@@ -50,6 +51,20 @@ public class SignUtil {
             json.put(entry.getKey(), entry.getValue());
         }
         return json.toJSONString();
+    }
+
+    /** 可能出现多线程问题，之后修改 */
+    public static boolean checkExcelExt(MultipartFile file) {
+        // 正确性检验
+        int dotPos = file.getOriginalFilename().lastIndexOf(".");
+        if (dotPos < 0) {
+            return true;
+        }
+        String fileExt = file.getOriginalFilename().substring(dotPos + 1).toLowerCase();
+        if (!isFileAllowed(fileExt)) {
+            return true;
+        }
+        return false;
     }
 
     /** 可能出现多线程问题，之后修改 */

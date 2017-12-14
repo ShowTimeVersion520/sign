@@ -19,11 +19,27 @@
 <body>
 <a href="/admin/change/password">密码修改</a>
 <form id="uploadCourse" name="uploadCourse" method="post" onsubmit=""
-      action="/admin/upload/course"
+             action="/admin/upload/course"
+             enctype="multipart/form-data">
+
+    课程上传(支持xls格式): <input type="file" name="file">
+    <input type="submit" name="Submit" value="上传" />
+</form>
+<br>
+<form id="uploadStudent" name="uploadStudent" method="post" onsubmit=""
+      action="/admin/upload/student"
       enctype="multipart/form-data">
 
-    <input type="file" name="file">
-    <input type="submit" name="Submit" value="课程上传" />
+    学生账号上传(支持xls格式):  <input type="file" name="file">
+    <input type="submit" name="Submit" value="上传" />
+</form>
+<br>
+<form id="uploadTeacher" name="uploadTeacher" method="post" onsubmit=""
+      action="/admin/upload/teacher"
+      enctype="multipart/form-data">
+
+    教师账号上传(支持xls格式):  <input type="file" name="file">
+    <input type="submit" name="Submit" value="上传" />
 </form>
 </body>
 </html>
