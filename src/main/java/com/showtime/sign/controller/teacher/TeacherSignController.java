@@ -2,8 +2,12 @@ package com.showtime.sign.controller.teacher;
 
 import com.showtime.sign.mapper.CoursesMapper;
 import com.showtime.sign.model.base.HostHolder;
+import com.showtime.sign.model.base.ViewObject;
 import com.showtime.sign.model.entity.Courses;
+import com.showtime.sign.model.entity.SignDetil;
+import com.showtime.sign.model.entity.Students;
 import com.showtime.sign.service.CourseService;
+import com.showtime.sign.service.SignService;
 import com.showtime.sign.service.StudentService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -15,8 +19,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.swing.text.html.ObjectView;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +33,11 @@ public class TeacherSignController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private SignService signService;
 
     @Autowired
     private CoursesMapper coursesMapper;
@@ -45,8 +56,22 @@ public class TeacherSignController {
 
     @GetMapping(value = {"/detail"})
     public String signDetail(@Param("id") Long id, Model model){
-
+        List<ViewObject> vos = new ArrayList<>();
         Courses course = coursesMapper.selectByPrimaryKey(id);
+        List<Students> students = studentService.getStudentsByClassName(course.getClasses());
+        List<SignDetil> signDetils = signService.getByCourseId(id);
+        for(Students student:students){
+            for(SignDetil signDetil:signDetils){
+                if(student.getId().equals(signDetil.getStudentId())){
+                    ViewObject vo = new ViewObject();
+                    vo.set("student", student);
+                    vo.set("signDetail", signDetil);
+                    log.info("student account: {}", student.getAccount());
+                    vos.add(vo);
+                }
+            }
+        }
+        model.addAttribute("vos", vos);
         model.addAttribute("course", course);
         return "teacher/signDetail";
     }

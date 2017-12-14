@@ -5,12 +5,11 @@ import com.github.pagehelper.Page;
 import com.showtime.sign.model.base.ViewObject;
 import com.showtime.sign.service.AdminService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,18 @@ public class AdminIndexController {
     @GetMapping(value = {"/index"})
     public String index(){
         return "admin/index";
+    }
+
+    @GetMapping(value = {"/change/password"})
+    public String IntoChangePassword(){
+        return "admin/changePassword";
+    }
+
+    @ResponseBody
+    @PostMapping(value = {"/change/password"})
+    public String updatePassword(@Param("password") String password){
+        adminService.updatePassword(password);
+        return "密码修改成功";
     }
 
 

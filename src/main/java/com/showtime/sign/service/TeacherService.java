@@ -1,13 +1,17 @@
 package com.showtime.sign.service;
 
 import com.showtime.sign.constant.TicketRoleConstant;
+import com.showtime.sign.enums.ResultEnum;
+import com.showtime.sign.exception.SignException;
 import com.showtime.sign.mapper.LoginTicketMapper;
 import com.showtime.sign.mapper.StudentsMapper;
 import com.showtime.sign.mapper.TeachersMapper;
+import com.showtime.sign.model.base.HostHolder;
 import com.showtime.sign.model.entity.LoginTicket;
 import com.showtime.sign.model.entity.Students;
 import com.showtime.sign.model.entity.Teachers;
 import com.showtime.sign.utils.SignUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -22,6 +26,9 @@ public class TeacherService {
 
     @Autowired
     private LoginTicketMapper loginTicketMapper;
+
+    @Autowired
+    private HostHolder hostHolder;
 
     public Map<String, Object> register(String username, String password) {
         Map<String, Object> map = SignUtil.checkUsernameAndPassword(username,password);
@@ -100,5 +107,14 @@ public class TeacherService {
         LoginTicket loginTicket = new LoginTicket();
         loginTicket.setStatus((byte)0);
         loginTicketMapper.updateByExample(loginTicket, example);
+    }
+
+    public void updatePassword(String password) {
+        if (StringUtils.isBlank(password)) {
+            throw new SignException(ResultEnum.EMPTY_PASSWORD);
+        }
+        Teachers teacher = hostHolder.getTeacher();
+        teacher.setPassword(SignUtil.MD5(password+teacher.getSalt()));
+        teachersMapper.updateByPrimaryKey(teacher);
     }
 }

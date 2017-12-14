@@ -26,5 +26,34 @@
 <#if course.signState == 2 || course.signState == 3>
     <a href="/teacher/sign/end?courseId=${course.id}">结束签到</a>
 </#if>
+
+<#if vos??>
+    <table border="1">
+        <tr>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>班级</th>
+            <th>签到情况</th>
+            <th>签到时间</th>
+        </tr>
+        <#list vos as vo>
+        <tr>
+            <td>${vo.student.account}</td>
+            <td>${vo.student.name}</td>
+            <td>${vo.student.className}</td>
+            <#if vo.signDetail.getSignState() == 0>
+                <td>未签到</td>
+            </#if>
+            <#if vo.signDetail.getSignState() == 1>
+                <td>签到成功</td>
+            </#if>
+            <#if vo.signDetail.getSignState() == 2>
+                <td>补签</td>
+            </#if>
+            <td>${vo.signDetail.signTime?string('yyyy-MM-dd')}</td>
+        </tr>
+        </#list>
+    </table>
+</#if>
 </body>
 </html>

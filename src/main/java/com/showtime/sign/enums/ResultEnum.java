@@ -4,7 +4,8 @@ public enum ResultEnum {
     UNKNOW_ERROR(-1, "未知错误"),
     SUCCESS(0, "成功"),
 
-    UNKNOW_ROLE(100, "未知角色")
+    UNKNOW_ROLE(100, "未知角色"),
+    EMPTY_PASSWORD(101, "密码不能为空")
     ;
     private Integer code;
     private String msg;

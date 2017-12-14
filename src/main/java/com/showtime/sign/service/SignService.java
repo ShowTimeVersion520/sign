@@ -1,5 +1,6 @@
 package com.showtime.sign.service;
 
+import com.showtime.sign.constant.CourseFieldConstant;
 import com.showtime.sign.constant.CourseSignStateConstant;
 import com.showtime.sign.constant.SignDetailFieldConstant;
 import com.showtime.sign.constant.SignDetailStateConstant;
@@ -37,6 +38,11 @@ public class SignService {
             return "这节课不存在";
         }
         if(course.getSignState() >= 2){
+            //判断该学生是否属于该课程所对应的班级
+            if(!course.getClasses().contains(hostHolder.getStudent().getClassName())){
+                return "你不需要上这节课，签到失败";
+            }
+
             //判断该学生是否已经签到
             Example example = new Example(SignDetil.class);
             Example.Criteria criteria = example.createCriteria();
@@ -70,5 +76,20 @@ public class SignService {
         }
 
         return "签到失败";
+    }
+
+    public List<SignDetil> getByCourseId(Long courseId) {
+        Example example = new Example(SignDetil.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo(SignDetailFieldConstant.COURSE_ID, courseId);
+
+        return signDetilMapper.selectByExample(example);
+    }
+
+    public void deleteSignDetailByCourseId(Long courseId) {
+        Example example = new Example(SignDetil.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        signDetilMapper.deleteByExample(example);
     }
 }

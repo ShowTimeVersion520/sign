@@ -19,7 +19,7 @@ public class StudentServiceTest {
 
     @Test
     public void register() throws Exception {
-        studentService.register("3114001457", AccountPasswordConstant.PASSWORD);
+        studentService.register("3114001458", AccountPasswordConstant.PASSWORD, "张三", "物联网14(4)");
     }
 
     @Test

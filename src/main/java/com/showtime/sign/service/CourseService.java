@@ -29,6 +29,9 @@ public class CourseService {
     @Autowired
     private CoursesMapper coursesMapper;
 
+    @Autowired
+    private SignService signService;
+
     public String InsertCourseByExcel(MultipartFile file) throws Exception {
         // 正确性检验
         int dotPos = file.getOriginalFilename().lastIndexOf(".");
@@ -128,7 +131,9 @@ public class CourseService {
         coursesMapper.updateByPrimaryKey(course);
 
         //删除同学们的签到状态
+        signService.deleteSignDetailByCourseId(courseId);
     }
+
 
     public void afterSign(Long courseId) {
         Courses course = coursesMapper.selectByPrimaryKey(courseId);
