@@ -18,8 +18,8 @@ import java.util.UUID;
 public class SignUtil {
 
 
-    public static String TOUTIAO_DOMAIN = "http://127.0.0.1:8080/";
-    public static String EXCEL_DIR = "D:/upload/";
+    public static String _DOMAIN = "http://127.0.0.1:8080/";
+    public static String EXCEL_DIR = "D:/downloadDemo/";
     public static String[] EXCEL_FILE_EXTD = new String[] {"xls"};
 
 

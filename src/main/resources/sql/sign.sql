@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `sign_statistical`(
   `student_name` VARCHAR(64) COMMENT '学生姓名',
   `course_number` BIGINT UNSIGNED COMMENT '签到的课程',
   `sign_times` INT COMMENT '已经签到次数',
+  `sign_after_times` INT COMMENT '补签次数',
   `sign_need_times` INT COMMENT '需要签到次数'
 )ENGINE INNODB DEFAULT CHARSET=utf8 COMMENT='签到统计' AUTO_INCREMENT=1;
 

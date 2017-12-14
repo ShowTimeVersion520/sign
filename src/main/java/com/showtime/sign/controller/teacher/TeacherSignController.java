@@ -101,6 +101,8 @@ public class TeacherSignController {
     public String endSign(@Param("courseId") Long courseId){
         log.info("courseId : {}", courseId);
         courseService.endSign(courseId);
+
+        //TODO: 添加在结束时insert未签到的人的信息入SignDetail
         return "redirect:detail?id=" + courseId;
     }
 }
