@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!--[if IE]>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <![endif]-->
+    <title>签到历史</title>
+</head>
+<body>
+<#if msg??>
+    ${msg}
+</#if>
+<#list vos as vo>
+    课程名称： ${vo.course.name}  节次：${vo.course.jieci}  签到状态：
+    <#if vo.signDetail.getSignState() == 0>
+        未签到
+    </#if>
+    <#if vo.signDetail.getSignState() == 1>
+        签到成功
+    </#if>
+    <#if vo.signDetail.getSignState() == 2>
+        补签
+    </#if>
+
+    <#if vo.signDetail.getSignTime()??>
+          签到时间：${vo.signDetail.signTime?string('yyyy-MM-dd')}
+    </#if>
+    <br>
+
+</#list>
+</body>
+</html>

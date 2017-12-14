@@ -27,4 +27,14 @@
       (#{item.semester},#{item.number},#{item.name},#{item.classes},#{item.teacher},#{item.jieci},#{item.signState},#{item.date})
     </foreach>
   </insert>
+
+  <select id="getCourseBySignDetils" parameterType="java.util.List" resultType="com.showtime.sign.model.entity.Courses">
+    SELECT *
+    FROM courses c
+    WHERE c.id IN
+    <foreach collection="list" item="signDetail" index="index"
+             open="(" close=")" separator=",">
+      #{signDetail.courseId}
+    </foreach>
+  </select>
 </mapper>

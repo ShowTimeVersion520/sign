@@ -4,6 +4,7 @@ import com.showtime.sign.constant.CourseFieldConstant;
 import com.showtime.sign.constant.CourseSignStateConstant;
 import com.showtime.sign.mapper.CoursesMapper;
 import com.showtime.sign.model.entity.Courses;
+import com.showtime.sign.model.entity.SignDetil;
 import com.showtime.sign.utils.SignUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFRow;
@@ -146,5 +147,9 @@ public class CourseService {
         Courses course = coursesMapper.selectByPrimaryKey(courseId);
         course.setSignState(CourseSignStateConstant.FINISH_SIGN);
         coursesMapper.updateByPrimaryKey(course);
+    }
+
+    public List<Courses> getCourseBySignDetils(List<SignDetil> signDetils) {
+        return coursesMapper.getCourseBySignDetils(signDetils);
     }
 }

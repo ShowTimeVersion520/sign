@@ -92,4 +92,12 @@ public class SignService {
 
         signDetilMapper.deleteByExample(example);
     }
+
+    public List<SignDetil> getByStudentId(Long id) {
+        Example example = new Example(SignDetil.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo(SignDetailFieldConstant.STUDENT_ID, id);
+
+        return signDetilMapper.selectByExample(example);
+    }
 }
