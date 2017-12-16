@@ -1,9 +1,6 @@
 package com.showtime.sign.service;
 
-import com.showtime.sign.constant.AccountPasswordConstant;
-import com.showtime.sign.constant.CourseFieldConstant;
-import com.showtime.sign.constant.CourseSignStateConstant;
-import com.showtime.sign.constant.StudentFieldConstant;
+import com.showtime.sign.constant.*;
 import com.showtime.sign.enums.ResultEnum;
 import com.showtime.sign.exception.SignException;
 import com.showtime.sign.mapper.CoursesMapper;
@@ -38,6 +35,9 @@ public class CourseService {
 
     @Autowired
     private SignService signService;
+
+    @Autowired
+    private StudentService studentService;
 
     public void InsertCourseByExcel(MultipartFile file) throws Exception {
         if (SignUtil.checkExcelExt(file)) throw new SignException(ResultEnum.ERROR_EXCEL_EXT);
@@ -164,11 +164,49 @@ public class CourseService {
         coursesMapper.updateByPrimaryKey(course);
     }
 
+    @Transactional
     public void endSign(Long courseId) {
-        log.info("into endSign");
+        log.info("=======================into endSign==========================");
         Courses course = coursesMapper.selectByPrimaryKey(courseId);
         course.setSignState(CourseSignStateConstant.FINISH_SIGN);
         coursesMapper.updateByPrimaryKey(course);
+
+        //添加在结束时insert未签到的人的信息入SignDetail
+        List<Students> students = studentService.getStudentsByClassName(course.getClasses());
+        List<SignDetil> signDetils = signService.getByCourseId(courseId);
+        List<SignDetil> insertContent = new ArrayList<>();
+        //对已经有记录的同学进行剔除
+        for(int i=0;i<students.size();++i){
+            boolean falg = false;   //用于识别是否已经break过
+            for(SignDetil signDetil:signDetils){
+                if(students.get(i).getId().equals(signDetil.getStudentId())){
+                    log.info("student: {}", students.get(i).getName());
+                    students.remove(i);
+                    --i;
+                    falg = true;
+                    break;
+                }
+            }
+
+            if(falg){
+                log.info("flag is true");
+               continue;
+            }
+            Students student = students.get(i);
+            SignDetil signDetil = new SignDetil();
+            signDetil.setCourseId(courseId);
+            signDetil.setSignState(SignDetailStateConstant.NOT_SIGN);
+            signDetil.setStudentName(student.getName());
+            signDetil.setStudentId(student.getId());
+            signDetil.setSignTime(new Date());
+            signDetil.setClassName(student.getClassName());
+            log.info("add signDetil name is {}", student.getName());
+            insertContent.add(signDetil);
+        }
+
+        if(insertContent.size() != 0){
+            signService.insertBatch(insertContent);
+        }
     }
 
     public List<Courses> getCourseBySignDetils(List<SignDetil> signDetils) {

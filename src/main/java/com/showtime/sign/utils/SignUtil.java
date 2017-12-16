@@ -2,24 +2,29 @@ package com.showtime.sign.utils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.showtime.sign.constant.LoginTicketFieldConstant;
+import com.showtime.sign.enums.SignStateEnum;
+import com.showtime.sign.model.base.ViewObject;
 import com.showtime.sign.model.entity.LoginTicket;
+import com.showtime.sign.model.entity.SignDetil;
+import com.showtime.sign.model.entity.Students;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 public class SignUtil {
 
 
-    public static String _DOMAIN = "http://127.0.0.1:8080/";
+    public static String SIGN_DOMAIN = "http://127.0.0.1:8080/";
     public static String EXCEL_DIR = "D:/downloadDemo/";
+    public static String EXCEL_DETAIL_DIR = "D:/downloadDetail/";
     public static String[] EXCEL_FILE_EXTD = new String[] {"xls"};
 
 
@@ -131,6 +136,39 @@ public class SignUtil {
         } catch (Exception e) {
             log.error("生成MD5失败", e);
             return null;
+        }
+    }
+
+    public static <T extends Enum<T>> T getEnumByCode(Byte code, Class<T> clazz) {
+        T result = null;
+        try{
+            T[] arr = clazz.getEnumConstants();
+            Method getCodeMethod = clazz.getDeclaredMethod("getCode");
+            Method getMsgMethod = clazz.getDeclaredMethod("getMsg");
+            Byte typeCodeVal = null;
+            for(T entity:arr){
+                typeCodeVal = (byte)getCodeMethod.invoke(entity);
+                if(typeCodeVal.equals(code)){
+                    result = entity;
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public static void JoinStudentAndSignDetail(List<ViewObject> vos, List<Students> students, List<SignDetil> signDetils) {
+        for(Students student:students){
+            for(SignDetil signDetil:signDetils){
+                if(student.getId().equals(signDetil.getStudentId())){
+                    ViewObject vo = new ViewObject();
+                    vo.set("student", student);
+                    vo.set("signDetail", signDetil);
+                    vos.add(vo);
+                }
+            }
         }
     }
 }

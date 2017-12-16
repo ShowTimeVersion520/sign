@@ -5,6 +5,20 @@ import javax.persistence.*;
 
 @Table(name = "sign_detil")
 public class SignDetil {
+
+    @Override
+    public String toString() {
+        return "SignDetil{" +
+                "id=" + id +
+                ", studentId=" + studentId +
+                ", className='" + className + '\'' +
+                ", studentName='" + studentName + '\'' +
+                ", courseId=" + courseId +
+                ", signTime=" + signTime +
+                ", signState=" + signState +
+                '}';
+    }
+
     /**
      * 表主键
      */

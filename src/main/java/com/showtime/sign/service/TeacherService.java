@@ -11,10 +11,12 @@ import com.showtime.sign.mapper.StudentsMapper;
 import com.showtime.sign.mapper.TeachersMapper;
 import com.showtime.sign.model.base.HostHolder;
 import com.showtime.sign.model.entity.LoginTicket;
+import com.showtime.sign.model.entity.SignDetil;
 import com.showtime.sign.model.entity.Students;
 import com.showtime.sign.model.entity.Teachers;
 import com.showtime.sign.utils.SignUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -38,6 +40,7 @@ public class TeacherService {
 
     @Autowired
     private LoginTicketMapper loginTicketMapper;
+
 
     @Autowired
     private HostHolder hostHolder;
@@ -186,4 +189,5 @@ public class TeacherService {
             teachersMapper.InsertBatch(teachers);
         }
     }
+
 }

@@ -13,4 +13,16 @@
     <result column="sign_time" property="signTime" jdbcType="TIMESTAMP" />
     <result column="sign_state" property="signState" jdbcType="TINYINT" />
   </resultMap>
+
+  <insert id="insertBatch" useGeneratedKeys="true" parameterType="java.util.List">
+    <selectKey resultType="long" keyProperty="id" order="AFTER">
+      SELECT
+      LAST_INSERT_ID()
+    </selectKey>
+    insert into sign_detil (student_id, class_name, student_name, course_id, sign_time, sign_state)
+    values
+    <foreach collection="list" item="item" index="index" separator="," >
+      (#{item.studentId},#{item.className},#{item.studentName},#{item.courseId},#{item.signTime},#{item.signState})
+    </foreach>
+  </insert>
 </mapper>

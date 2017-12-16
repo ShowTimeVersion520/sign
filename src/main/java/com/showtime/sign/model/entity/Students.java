@@ -3,6 +3,18 @@ package com.showtime.sign.model.entity;
 import javax.persistence.*;
 
 public class Students {
+    @Override
+    public String toString() {
+        return "Students{" +
+                "id=" + id +
+                ", account='" + account + '\'' +
+                ", name='" + name + '\'' +
+                ", className='" + className + '\'' +
+                ", password='" + password + '\'' +
+                ", salt='" + salt + '\'' +
+                '}';
+    }
+
     /**
      * 表主键
      */

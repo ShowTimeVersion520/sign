@@ -36,6 +36,7 @@
             <th>签到情况</th>
             <th>签到时间</th>
         </tr>
+        <a href="/teacher/detail/download?courseId=${course.id}">导出到EXCEL</a>
         <#list vos as vo>
         <tr>
             <td>${vo.student.account}</td>

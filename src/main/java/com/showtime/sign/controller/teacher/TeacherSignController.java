@@ -1,5 +1,6 @@
 package com.showtime.sign.controller.teacher;
 
+import com.showtime.sign.constant.SignDetailStateConstant;
 import com.showtime.sign.mapper.CoursesMapper;
 import com.showtime.sign.model.base.HostHolder;
 import com.showtime.sign.model.base.ViewObject;
@@ -9,6 +10,7 @@ import com.showtime.sign.model.entity.Students;
 import com.showtime.sign.service.CourseService;
 import com.showtime.sign.service.SignService;
 import com.showtime.sign.service.StudentService;
+import com.showtime.sign.utils.SignUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,17 +62,7 @@ public class TeacherSignController {
         Courses course = coursesMapper.selectByPrimaryKey(id);
         List<Students> students = studentService.getStudentsByClassName(course.getClasses());
         List<SignDetil> signDetils = signService.getByCourseId(id);
-        for(Students student:students){
-            for(SignDetil signDetil:signDetils){
-                if(student.getId().equals(signDetil.getStudentId())){
-                    ViewObject vo = new ViewObject();
-                    vo.set("student", student);
-                    vo.set("signDetail", signDetil);
-                    log.info("student account: {}", student.getAccount());
-                    vos.add(vo);
-                }
-            }
-        }
+        SignUtil.JoinStudentAndSignDetail(vos, students, signDetils);
         model.addAttribute("vos", vos);
         model.addAttribute("course", course);
         return "teacher/signDetail";
@@ -102,7 +94,6 @@ public class TeacherSignController {
         log.info("courseId : {}", courseId);
         courseService.endSign(courseId);
 
-        //TODO: 添加在结束时insert未签到的人的信息入SignDetail
         return "redirect:detail?id=" + courseId;
     }
 }

@@ -59,7 +59,7 @@ public class AdminExcelController {
             StreamUtils.copy(new FileInputStream(new
                     File(SignUtil.EXCEL_DIR + fileName+"Demo.xls")), response.getOutputStream());
         } catch (Exception e) {
-            log.error("读取图片错误" + fileName+"Demo" + e.getMessage());
+            log.error("读取文件错误" + fileName+"Demo" + e.getMessage());
         }
     }
 
