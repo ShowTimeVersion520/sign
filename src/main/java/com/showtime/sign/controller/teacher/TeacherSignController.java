@@ -56,6 +56,15 @@ public class TeacherSignController {
         return "teacher/signList";
     }
 
+    @GetMapping(value = {"/history"})
+    public String signHistory(Model model){
+
+        List<Courses> courses = courseService.getCourseByTeacherNameAndBeforeDate(hostHolder.getTeacher().getAccount(),
+                new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+        model.addAttribute("courses", courses);
+        return "teacher/signList";
+    }
+
     @GetMapping(value = {"/detail"})
     public String signDetail(@Param("id") Long id, Model model){
         List<ViewObject> vos = new ArrayList<>();

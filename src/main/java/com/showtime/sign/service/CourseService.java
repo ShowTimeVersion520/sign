@@ -213,4 +213,12 @@ public class CourseService {
         return coursesMapper.getCourseBySignDetils(signDetils);
     }
 
+    public List<Courses> getCourseByTeacherNameAndBeforeDate(String name, String date) {
+        Example example = new Example(Courses.class);
+        Example.Criteria criteria = example.createCriteria();
+
+        criteria.andEqualTo(CourseFieldConstant.TEACHER, name);
+        criteria.andLessThan(CourseFieldConstant.DATE, date);
+        return coursesMapper.selectByExample(example);
+    }
 }
