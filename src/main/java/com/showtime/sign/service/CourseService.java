@@ -40,8 +40,9 @@ public class CourseService {
     private StudentService studentService;
 
     public void InsertCourseByExcel(MultipartFile file) throws Exception {
-        if (SignUtil.checkExcelExt(file)) throw new SignException(ResultEnum.ERROR_EXCEL_EXT);
-
+        if (SignUtil.checkExcelExt(file)) {
+            throw new SignException(ResultEnum.ERROR_EXCEL_EXT);
+        }
 
         POIFSFileSystem fs=new POIFSFileSystem((FileInputStream)file.getInputStream());
         //得到Excel工作簿对象
@@ -49,8 +50,10 @@ public class CourseService {
         //得到Excel工作表对象
         HSSFSheet sheet = wb.getSheetAt(0);
 
-        int nowTeacher = 0; //用于记录现在是哪个老师
-        List<Courses> courses = new ArrayList<>();  //存储course
+        //用于记录现在是哪个老师
+        int nowTeacher = 0;
+        //存储course
+        List<Courses> courses = new ArrayList<>();
 
         //得到Excel工作表的行
         for(int i=1; i<sheet.getLastRowNum(); ++i){
@@ -64,27 +67,35 @@ public class CourseService {
 
             for(int j=0; j<=13; ++j){
                 switch (j){
-                    case 0 :    //学年学期
+                    //学年学期
+                    case 0 :
                         course.setSemester(row.getCell(j).getStringCellValue());
                         break;
-                    case 1 :    //开课编号
+                    //开课编号
+                    case 1 :
                         course.setNumber(Integer.parseInt(row.getCell(j).getStringCellValue()));
                         break;
-                    case 2 :    //课程名称
+                    //课程名称
+                    case 2 :
                         course.setName(row.getCell(j).getStringCellValue());
                         break;
-                    case 3 :    //教学班名称
+                    //教学班名称
+                    case 3 :
                         course.setClasses(row.getCell(j).getStringCellValue());
                         break;
-                    case 6 :    //授课教师
+                    //授课教师
+                    case 6 :
                         course.setTeacher(teacher[nowTeacher]);
                         break;
-                    case 8 :    //节次
+                    //节次
+                    case 8 :
                         course.setJieci(row.getCell(j).getStringCellValue());
                         break;
-                    case 13 :   //日期
+                    //日期
+                    case 13 :
                         course.setDate(new SimpleDateFormat("yyyy-MM-dd").parse(row.getCell(j).getStringCellValue()));
                         break;
+                    default:
                 }
             }
 

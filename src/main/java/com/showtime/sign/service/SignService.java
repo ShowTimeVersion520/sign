@@ -71,6 +71,8 @@ public class SignService {
             if(signDetils.size() != 0){
                 if(SignDetailStateConstant.FINISH_SIGN.equals(signDetils.get(0).getSignState())){
                     return "你已经签到";
+                }else if(CourseSignStateConstant.AFTER_SIGN.equals(signDetils.get(0).getSignState())){
+                    return "你已经补签";
                 }else if(CourseSignStateConstant.NOT_SIGN.equals(signDetils.get(0).getSignState())){
                     SignDetil s1 = signDetils.get(0);
                     s1.setSignState(SignDetailStateConstant.AFTER_SIGN);
